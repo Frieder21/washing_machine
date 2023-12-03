@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/assets/css/style.css">
-    <title>Title</title>
+    <script src="/static/assets/js/script.js"></script>
+    <title>WMTD</title>
 </head>
 <body>
     {% for washing_machine_or_tumble_dryer in wmotdd %}
@@ -26,16 +27,17 @@
                     <h2>{{ washing_machine_or_tumble_dryer["status"] }}</h2>
                     {% if  washing_machine_or_tumble_dryer["status"] == "running" %}
                         <h3>{{ washing_machine_or_tumble_dryer["time_left"] }}</h3>
-                        <form action="/api" method="get">
+                        <form id="{{ str(washing_machine_or_tumble_dryer["unique_id"])+washing_machine_or_tumble_dryer["device_id"] }}" action="/api" method="get">
                             <input type="hidden" name="action" value="end">
                             <input type="hidden" name="device_id" value="{{ washing_machine_or_tumble_dryer["unique_id"] }}">
-                            <input type="submit" value="Stop">
+                            <button type="button" onclick="submitForm('{{ str(washing_machine_or_tumble_dryer["unique_id"])+washing_machine_or_tumble_dryer["device_id"] }}')">Stop</button>
+                        </form>
                     {% else %}
-                        <form action="/api" method="get">
+                        <form id="{{ str(washing_machine_or_tumble_dryer["unique_id"])+washing_machine_or_tumble_dryer["device_id"] }}" action="/api" method="get">
                             <input type="hidden" name="action" value="start">
                             <input type="hidden" name="device_id" value="{{ washing_machine_or_tumble_dryer["unique_id"] }}">
                             <input type="time" name="duration" value="{{ washing_machine_or_tumble_dryer["max_duration"] }}">
-                            <input type="submit" value="Start">
+                            <button type="button" onclick="submitForm('{{ str(washing_machine_or_tumble_dryer["unique_id"])+washing_machine_or_tumble_dryer["device_id"] }}')">Start</button>
                         </form>
                     {% endif %}
                 </td>
