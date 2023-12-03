@@ -194,7 +194,9 @@ def home():
     return render_template('washing_machine-tumble_dryer.html',
                            wmotdd=[machine1.status_for_web(), machine2.status_for_web(), machine3.status_for_web(), machine4.status_for_web()], str=str)
 
-
+@app.route('/favicon.ico')
+def favicon():
+    return redirect(url_for('static', filename='assets/img/favicon.ico'))
 
 if __name__ == '__main__':
     app.run()
