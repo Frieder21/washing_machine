@@ -19,9 +19,6 @@ function submitForm(id) {
     method: 'POST',
     body: formData
   })
-  .then(response => {
-    window.location.href = "https://wmtd.frieda-univers.me/";
-  })
   .catch(error => {
     console.error('error', error);
   });
