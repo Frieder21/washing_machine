@@ -127,7 +127,7 @@ def api():
             hours, minutes = request.args.get('duration').split(":")
             duration = int(hours) * 60 + int(minutes)
             cookies = devices[int(device)].start(float(duration))
-            resp = app.make_response(redirect(url_for('home', _scheme='https', _external=True
+            resp = app.make_response(redirect(url_for('home', _scheme='https', _external=True)))
             resp.set_cookie(str(device), cookies[0], max_age=int(60 * float(duration)))
             return resp
         if request.args.get('action') == 'end':
