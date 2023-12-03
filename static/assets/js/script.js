@@ -15,7 +15,7 @@ function submitForm(id) {
     }
   }
 
-  fetch('/api', {
+  fetch('https://wmtd.frieda-univers.me/api', {
     method: 'POST',
     body: formData
   })
