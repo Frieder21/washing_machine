@@ -3,8 +3,6 @@ import secrets
 import datetime
 app = Flask(__name__)
 
-
-
 class washing_machineor_tumble_dryer:
     def __init__(self, washing_machine_or_tumble_dryer: bool, max_duration: int = 240, unique_id: int = 0):
         """
@@ -12,6 +10,8 @@ class washing_machineor_tumble_dryer:
         :type washing_machine_or_tumble_dryer: bool True = washing_machine, False = tumble_dryer
         :type max_duration: int in minutes
         """
+        import secrets
+        import datetime
         if washing_machine_or_tumble_dryer:
             self.device = "washing_machine"
         else:
@@ -25,10 +25,15 @@ class washing_machineor_tumble_dryer:
         self.user_id = None
 
     def start(self, duration_minutes: int):
+        print(self.end_time, datetime.datetime.now().timestamp())
         if self.end_time > datetime.datetime.now().timestamp():
+            print("already running")
             return "already running"
+        print(duration_minutes, self.max_duration)
         if duration_minutes > self.max_duration:
+            print("duration too long")
             return "duration too long"
+        print("start")
         self.start_time = datetime.datetime.now().timestamp()
         self.end_time = self.start_time + duration_minutes * 60
         self.open = False
@@ -91,24 +96,16 @@ class washing_machineor_tumble_dryer:
             dict["x_animation"] = "washing"
             dict["rotate_animation"] = "rotate"
         time = datetime.datetime.fromtimestamp(self.max_duration*60)
-        dict["max_duration"] = "{:02d}:{:02d}".format(time.hour, time.minute)
+        dict["max_duration"] = "{:02d}:{:02d}".format(time.hour-1, time.minute)
         dict["unique_id"] = self.unique_id
         return dict
 
 
-machine1 = washing_machineor_tumble_dryer(True,unique_id=1)
-machine2 = washing_machineor_tumble_dryer(True,unique_id=2)
-machine3 = washing_machineor_tumble_dryer(True,unique_id=3)
-machine4 = washing_machineor_tumble_dryer(False,unique_id=4)
-devices = {
-    1: machine1,
-    2: machine2,
-    3: machine3,
-    4: machine4
-}
+
 
 @app.route('/api', methods=['GET', 'POST'] )
 def api():
+    global devices
     if request.method == 'POST':
         if request.form['action'] == 'start':
             device = request.form['device_id']
@@ -116,44 +113,47 @@ def api():
             duration = int(hours) * 60 + int(minutes)
             cookies = devices[int(device)].start(float(duration))
             resp = app.make_response(redirect(url_for('home')))
-            resp.set_cookie('user_id', cookies[0], max_age=int(60 * float(duration)))
+            resp.set_cookie(str(device), cookies[0], max_age=int(60 * float(duration)))
             return resp
         if request.form['action'] == 'end':
             device = request.form['device_id']
             try:
-                user_id = request.cookies.get('user_id')
+                user_id = request.cookies.get(str(device))
             except:
                 user_id = ""
             if devices[int(device)].end(user_id) == "wrong user id":
                 return "wrong user id"
             resp = app.make_response(redirect(url_for('home')))
-            resp.set_cookie('user_id', '', max_age=0)
+            resp.set_cookie(str(device), '', max_age=0)
             return resp
     elif request.method == 'GET':
         if request.args.get('action') == 'start':
             device = request.args.get('device_id')
             hours, minutes = request.args.get('duration').split(":")
             duration = int(hours) * 60 + int(minutes)
+            print(devices[int(device)].status())
             cookies = devices[int(device)].start(float(duration))
+            print(devices[int(device)].status())
             resp = app.make_response(redirect(url_for('home')))
-            resp.set_cookie('user_id', cookies[0], max_age=int(60 * float(duration)))
+            resp.set_cookie(str(device), cookies[0], max_age=int(60 * float(duration)))
             return resp
         if request.args.get('action') == 'end':
             device = request.args.get('device_id')
             try:
-                user_id = request.cookies.get('user_id')
+                user_id = request.cookies.get(str(device))
             except:
                 user_id = ""
             if devices[int(device)].end(user_id) == "wrong user id":
                 return "wrong user id"
             resp = app.make_response(redirect(url_for('home')))
-            resp.set_cookie('user_id', '', max_age=0)
+            resp.set_cookie(str(device), '', max_age=0)
             return resp
     return "error"
 
 
 @app.route('/start/<device>/<duration>')
 def start(device, duration):
+    global devices
     cookies = [machine1, machine2][int(device)].start(float(duration))
     resp = app.make_response(redirect(url_for('home')))
     print(int(60 * float(duration)))
@@ -162,6 +162,7 @@ def start(device, duration):
 
 @app.route('/end/<device>')
 def end(device):
+    global devices
     try:
         user_id = request.cookies.get('user_id')
     except:
@@ -172,13 +173,39 @@ def end(device):
     return resp
 
 
+@app.route("/api/update")
 
 
 @app.route('/')
 def home():
+    global devices
+    global machine1
+    global machine2
+    global machine3
+    global machine4
+    try:
+        machine1.check_if_ready_and_end()
+        machine2.check_if_ready_and_end()
+        machine3.check_if_ready_and_end()
+        machine4.check_if_ready_and_end()
+    except:
+        print("error")
+        machine1 = washing_machineor_tumble_dryer(True, unique_id=1)
+        machine2 = washing_machineor_tumble_dryer(True, unique_id=2)
+        machine3 = washing_machineor_tumble_dryer(True, unique_id=3)
+        machine4 = washing_machineor_tumble_dryer(False, unique_id=4)
+        devices = {
+            1: machine1,
+            2: machine2,
+            3: machine3,
+            4: machine4
+        }
+    print(machine1.status())
     return render_template('washing_machine-tumble_dryer.html',
-                           wmotdd=[machine1.status_for_web(), machine2.status_for_web(), machine3.status_for_web(), machine4.status_for_web()])
+                           wmotdd=[machine1.status_for_web(), machine2.status_for_web(), machine3.status_for_web(), machine4.status_for_web()], str=str)
+
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
+
