@@ -31,14 +31,14 @@
                         <form id="{{ str(washing_machine_or_tumble_dryer["unique_id"])+washing_machine_or_tumble_dryer["device_id"] }}" action="/api" method="get">
                             <input type="hidden" name="action" value="end">
                             <input type="hidden" name="device_id" value="{{ washing_machine_or_tumble_dryer["unique_id"] }}">
-                            <button type="button" onclick="submitForm('{{ str(washing_machine_or_tumble_dryer["unique_id"])+washing_machine_or_tumble_dryer["device_id"] }}')">Stop</button>
+                            <input type="submit" value="Stop">
                         </form>
                     {% else %}
                         <form id="{{ str(washing_machine_or_tumble_dryer["unique_id"])+washing_machine_or_tumble_dryer["device_id"] }}" action="/api" method="get">
                             <input type="hidden" name="action" value="start">
                             <input type="hidden" name="device_id" value="{{ washing_machine_or_tumble_dryer["unique_id"] }}">
                             <input type="time" name="duration" value="{{ washing_machine_or_tumble_dryer["max_duration"] }}">
-                            <button type="button" onclick="submitForm('{{ str(washing_machine_or_tumble_dryer["unique_id"])+washing_machine_or_tumble_dryer["device_id"] }}')">Start</button>
+                            <input type="submit" value="Start">
                         </form>
                     {% endif %}
                 </td>
