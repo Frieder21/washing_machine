@@ -20,7 +20,7 @@ function submitForm(id) {
     body: formData
   })
   .then(response => {
-    window.location.href = window.location.href;
+    window.location.href = "https://wmtd.frieda-univers.me/";
   })
   .catch(error => {
     console.error('error', error);
@@ -28,6 +28,6 @@ function submitForm(id) {
 }
 
 function reloadPage() {
-  window.location.href = window.location.href;
+  window.location.href = "https://wmtd.frieda-univers.me/";
 }
 setTimeout(reloadPage, 30000);
