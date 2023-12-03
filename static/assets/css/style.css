@@ -1,5 +1,36 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #b9b3b3;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    color: #333;
+}
+header {
+    margin: 20px 20%;
+        justify-content: center;
+        align-items: center;
+}
+header table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+}
+header table tr td {
+    width: 50%;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#qrcode {
+    width: 8em;
+    height: 8em;
+    border-radius: 10px;
+}
+
 @media screen and (max-height: 1000px) {
-    body {
+    #content {
         background-color:#b9b3b3;
         font-family: 'Roboto', sans-serif;
         font-size: 16px;
@@ -96,7 +127,7 @@
     }
 }
 @media screen and (min-height: 1001px) and (min-width: 896px) {
-    body {
+    #content {
         background-color:#b9b3b3;
         font-family: 'Roboto', sans-serif;
         font-size: 32px;
@@ -194,4 +225,98 @@
     form * {
         font-size: 48px;
     }
+}
+#footer {
+    transition: 0.2s;
+    background-color: var(--my-dark-grey);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3vh;
+}
+
+#footer #updownarrow {
+    transition: 0.2s;
+    transform: translate(-50%, 0) scaleY(-1);
+    height: 2vh;
+    width: 2vh;
+    position: absolute;
+    left: 50%;
+    top: 0.5vh;
+}
+
+#footer #copyright {
+    transition: 0.2s;
+    font-family: B612MonoRegular, sans-serif;
+    color: var(--my-lighter-grey);
+    height: 1.5vh;
+    position: absolute;
+    left: 1vw;
+    bottom: 0;
+    transform: translate(0, 50%)
+}
+
+#footer #itemtext {
+    transition: 0.1s;
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 33%;
+    transform: translate(-50%, -50%);
+}
+
+#footer #itemicon {
+    transition: 0.1s;
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 67%;
+    transform: translate(-50%, -50%);
+}
+
+#footer #itemicon img {
+    padding: 0;
+    height: 0;
+    width: 0;
+}
+
+#footer #itemtext a {
+    font-family: B612MonoRegular, sans-serif;
+    color: var(--my-soft-white);
+    text-decoration: none;
+    padding: 20px;
+}
+
+#footer:hover #updownarrow {
+    transform: translate(-50%, 0) scaleY(1);
+}
+
+#footer:hover {
+    height: 20vh;
+}
+
+#footer:hover #copyright {
+    transform: translate(-50%, 0);
+    left: 50%;
+    color: var(--my-soft-white);
+    height: 3vh;
+    text-align: center;
+}
+
+#footer:hover #itemtext {
+    display: block;
+}
+
+#footer:hover #itemicon {
+    display: block;
+}
+#footer:hover #itemicon img {
+    padding: 20px;
+    height: 2vh;
+    width: 2vh;
+}
+
+#footer {
+    z-index: 20;
 }
