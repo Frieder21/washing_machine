@@ -20,7 +20,7 @@ function submitForm(id) {
     body: formData
   })
   .then(response => {
-    window.location.reload();
+    window.location.href = window.location.href;
   })
   .catch(error => {
     console.error('error', error);
@@ -28,6 +28,6 @@ function submitForm(id) {
 }
 
 function reloadPage() {
-  window.location.reload();
+  window.location.href = window.location.href;
 }
 setTimeout(reloadPage, 30000);
