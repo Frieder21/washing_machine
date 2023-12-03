@@ -196,7 +196,7 @@ def home():
 
 @app.route('/favicon.ico')
 def favicon():
-    return redirect(url_for('static', filename='assets/img/favicon.ico'))
+    return redirect(url_for('static', filename='assets/img/favicon.ico', _scheme='https', _external=True))
 
 if __name__ == '__main__':
     app.run()
