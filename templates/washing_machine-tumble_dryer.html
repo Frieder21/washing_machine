@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/assets/css/style.css">
+    <title>Title</title>
+</head>
+<body>
+    {% for washing_machine_or_tumble_dryer in wmotdd %}
+    <div class="miep">
+        <table>
+            <tr>
+                <td>
+                    <div class="{{ washing_machine_or_tumble_dryer["device_id"]}}">
+                        <div class="picture">
+                            <img class="picture1" src="/static/assets/img/machine6.png" alt="">
+                            <img class="picture2 {{ washing_machine_or_tumble_dryer["rotate_animation"] }}" src="{{ washing_machine_or_tumble_dryer["cloths_picture"] }}" alt="">
+                            <img class="picture3 {{ washing_machine_or_tumble_dryer["x_animation"] }}" src="{{ washing_machine_or_tumble_dryer["device_picture"] }}" alt="">
+                            <img class="picture4" src="/static/assets/img/machine0.png" alt="">
+                            <img class="picture5" src="{{ washing_machine_or_tumble_dryer["open_picture"] }}" alt="">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <h1>{{ washing_machine_or_tumble_dryer["device"] }} {{ washing_machine_or_tumble_dryer["unique_id"] }}</h1>
+                    <h2>{{ washing_machine_or_tumble_dryer["status"] }}</h2>
+                    {% if  washing_machine_or_tumble_dryer["status"] == "running" %}
+                        <h3>{{ washing_machine_or_tumble_dryer["time_left"] }}</h3>
+                        <form action="/api" method="get">
+                            <input type="hidden" name="action" value="end">
+                            <input type="hidden" name="device_id" value="{{ washing_machine_or_tumble_dryer["unique_id"] }}">
+                            <input type="submit" value="Stop">
+                    {% else %}
+                        <form action="/api" method="get">
+                            <input type="hidden" name="action" value="start">
+                            <input type="hidden" name="device_id" value="{{ washing_machine_or_tumble_dryer["unique_id"] }}">
+                            <input type="time" name="duration" value="{{ washing_machine_or_tumble_dryer["max_duration"] }}">
+                            <input type="submit" value="Start">
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </div>
+    {% endfor %}
+</body>
+</html>

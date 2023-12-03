@@ -1,0 +1,95 @@
+body {
+    background-color:#b9b3b3;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.miep {
+    position: relative;
+    width: 448px;
+    height: 256px;
+    background-color: aliceblue;
+    border-radius: 20px;
+    margin: 20px;
+    padding: 20px;
+}
+
+.washing_machine, .tumble_dryer {
+    position: relative;
+    width: 224px;
+    height: 256px;
+    overflow: hidden;
+}
+.picture {
+    position: absolute;
+    width: 224px;
+    height: 256px;
+    overflow: hidden;
+}
+.picture * {
+    position: absolute;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    width: 224px;
+    height: 256px;
+}
+.picture1{
+    z-index: 10;
+}
+.picture2 {
+    z-index: 11;
+    transform-origin: 111px 147px;
+}
+.picture3 {
+    z-index: 12;
+    width: 448px;
+    opacity: 70%;
+
+}
+.washing {
+    animation: loop1 18s infinite reverse linear;
+}
+
+.rotate {
+    transform-origin: 111px 147px;
+    -webkit-animation:spin 4s linear infinite;
+    -moz-animation:spin 4s linear infinite;
+    animation:spin 4s linear infinite;
+}
+
+.picture4 {
+    z-index: 13;
+}
+.picture5 {
+    z-index: 14;
+}
+
+@keyframes loop1 {
+   from {
+       transform: translate(0px, 0px);
+   }
+   to {
+         transform: translate(-224px, 0px);
+   }
+}
+
+@-moz-keyframes spin {
+    100% { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform:rotate(360deg);
+    }
+}
