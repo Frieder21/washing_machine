@@ -25,15 +25,10 @@ class washing_machineor_tumble_dryer:
         self.user_id = None
 
     def start(self, duration_minutes: int):
-        print(self.end_time, datetime.datetime.now().timestamp())
         if self.end_time > datetime.datetime.now().timestamp():
-            print("already running")
             return "already running"
-        print(duration_minutes, self.max_duration)
         if duration_minutes > self.max_duration:
-            print("duration too long")
             return "duration too long"
-        print("start")
         self.start_time = datetime.datetime.now().timestamp()
         self.end_time = self.start_time + duration_minutes * 60
         self.open = False
@@ -131,9 +126,7 @@ def api():
             device = request.args.get('device_id')
             hours, minutes = request.args.get('duration').split(":")
             duration = int(hours) * 60 + int(minutes)
-            print(devices[int(device)].status())
             cookies = devices[int(device)].start(float(duration))
-            print(devices[int(device)].status())
             resp = app.make_response(redirect(url_for('home')))
             resp.set_cookie(str(device), cookies[0], max_age=int(60 * float(duration)))
             return resp
@@ -156,7 +149,6 @@ def start(device, duration):
     global devices
     cookies = [machine1, machine2][int(device)].start(float(duration))
     resp = app.make_response(redirect(url_for('home')))
-    print(int(60 * float(duration)))
     resp.set_cookie('user_id', cookies[0], max_age=int(60 * float(duration)))
     return resp
 
@@ -189,7 +181,6 @@ def home():
         machine3.check_if_ready_and_end()
         machine4.check_if_ready_and_end()
     except:
-        print("error")
         machine1 = washing_machineor_tumble_dryer(True, unique_id=1)
         machine2 = washing_machineor_tumble_dryer(True, unique_id=2)
         machine3 = washing_machineor_tumble_dryer(True, unique_id=3)
@@ -200,7 +191,6 @@ def home():
             3: machine3,
             4: machine4
         }
-    print(machine1.status())
     return render_template('washing_machine-tumble_dryer.html',
                            wmotdd=[machine1.status_for_web(), machine2.status_for_web(), machine3.status_for_web(), machine4.status_for_web()], str=str)
 
