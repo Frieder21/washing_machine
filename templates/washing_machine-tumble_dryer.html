@@ -37,8 +37,8 @@
                         <div class="{{ washing_machine_or_tumble_dryer["device_id"]}}">
                             <div class="picture">
                                 <img class="picture1" src="/static/assets/img/machine6.png" alt="">
-                                <img class="picture2 {{ washing_machine_or_tumble_dryer["rotate_animation"] }}" src="{{ washing_machine_or_tumble_dryer["cloths_picture"] }}" alt="">
-                                <img class="picture3 {{ washing_machine_or_tumble_dryer["x_animation"] }}" src="{{ washing_machine_or_tumble_dryer["device_picture"] }}" alt="">
+                                <img style="--random-duration: {{ random_duration() }}" class="picture2 {{ washing_machine_or_tumble_dryer["rotate_animation"] }}" src="{{ washing_machine_or_tumble_dryer["cloths_picture"] }}" alt="">
+                                <img style="--random-duration: {{ random_duration() }}" class="picture3 {{ washing_machine_or_tumble_dryer["x_animation"] }}" src="{{ washing_machine_or_tumble_dryer["device_picture"] }}" alt="">
                                 <img class="picture4" src="/static/assets/img/machine0.png" alt="">
                                 <img class="picture5" src="{{ washing_machine_or_tumble_dryer["open_picture"] }}" alt="">
                             </div>
