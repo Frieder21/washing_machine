@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import secrets
 import datetime
+import random
 app = Flask(__name__)
+
+def random_duration():
+    return str(str(random.randint(2, 15)) + "s")
 
 class washing_machineor_tumble_dryer:
     def __init__(self, washing_machine_or_tumble_dryer: bool, max_duration: int = 240, unique_id: int = 0):
@@ -192,7 +196,8 @@ def home():
             4: machine4
         }
     return render_template('washing_machine-tumble_dryer.html',
-                           wmotdd=[machine1.status_for_web(), machine2.status_for_web(), machine3.status_for_web(), machine4.status_for_web()], str=str)
+                           wmotdd=[machine1.status_for_web(), machine2.status_for_web(), machine3.status_for_web(), machine4.status_for_web()],
+                           str=str, random_duration=random_duration)
 
 @app.route('/favicon.ico')
 def favicon():
