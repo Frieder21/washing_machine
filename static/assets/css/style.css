@@ -288,6 +288,13 @@ header table tr td {
     padding: 20px;
 }
 
+#footer #itemtext .user_count {
+    font-family: B612MonoRegular, sans-serif;
+    color: var(--my-soft-white);
+    text-decoration: none;
+    padding: 20px;
+}
+
 #footer:hover #updownarrow {
     transform: translate(-50%, 0) scaleY(1);
 }
