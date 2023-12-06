@@ -3,9 +3,19 @@ import secrets
 import datetime
 import random
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(256)
 
 def random_duration():
     return str(str(random.randint(2, 15)) + "s")
+
+def read_views(filename="views"):
+    with open(filename, "r",encoding="utf-8") as file:
+        return int(file.read())
+
+def write_views(views, filename="views"):
+    with open(filename, "w",encoding="utf-8") as file:
+        file.write(str(views))
+
 
 class washing_machineor_tumble_dryer:
     def __init__(self, washing_machine_or_tumble_dryer: bool, max_duration: int = 240, unique_id: int = 0):
@@ -172,7 +182,7 @@ def end(device):
 @app.route("/api/update")
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
     global devices
     global machine1
@@ -195,9 +205,16 @@ def home():
             3: machine3,
             4: machine4
         }
+    views = read_views()
+    if not "user_id" in session:
+        session["user_id"] = secrets.token_hex(256)
+        views += 1
+        write_views(views)
+    total_views = read_views("totalviews")+1
+    write_views(total_views, "totalviews")
     return render_template('washing_machine-tumble_dryer.html',
                            wmotdd=[machine1.status_for_web(), machine2.status_for_web(), machine3.status_for_web(), machine4.status_for_web()],
-                           str=str, random_duration=random_duration)
+                           str=str, random_duration=random_duration, views=views, total_views=total_views)
 
 @app.route('/favicon.ico')
 def favicon():
