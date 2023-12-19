@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-import sqlite3
 import secrets
 import datetime
 import random
 import toml
-import sys
 import os
 import qrcode
 from qrcode.image.styledpil import StyledPilImage
