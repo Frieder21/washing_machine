@@ -1,10 +1,10 @@
 # WMTD
 sometimes I'm really bored and in the next moment (15h later) there is a new running website in front of me...
 
-[![wmtd.png](https://beta.frieda-univers.me/static/assets/images/wmtd.png)](https://beta.frieda-univers.me/static/assets/images/wmtd.png)
+[![wmtd.png](../static/assets/images/wmtd.png)](../static/assets/images/wmtd.png)
 
 this is a website you could host on your own for sharing people in your dorm that the washing machine or the tumble dryer is/n't ready to use.
-## What was the best part creating it?
+## What was the best part?
 I liked to design the washing machine and the tumble dryer. I also liked to create the backend.
 ## Do you want me to host it for you?
 Yes, I could host it for you but I'm broke, so I would be happy if you donate a small amount. Just massage me on [Matrix: @frieda:catgirl.cloud](https://matrix.to/#/@frieda:catgirl.cloud), [Email](mailto:feedo@posteo.de) or Discord: friedaaaaaaa.
@@ -16,7 +16,7 @@ There are a lot of tutorials out there. I did it without one. I installed [ubunt
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install python3, python3-pip, nginx, git, certbot
-pip3 install flask
+pip3 install flask, gunicorn, qrcode[pil], toml
 ```
 this is the minimum you need to run the website. I also installed [gunicorn](https://gunicorn.org/) to run the website and [certbot](https://certbot.eff.org/) to get a ssl certificate.
 ### Installing the website
@@ -95,33 +95,32 @@ sudo certbot --nginx
 ### Configuring the website
 now you need to configure how many washing machines or tumble dryers you have and how long they maximum need to run. For this you need to edit the app.py file.
 ```bash
-sudo nano /var/www/html/washing_machine/app.py
-```
-here is an example where I removed two washing machines from app.py:
-```python
-@app.route('/')
-def home():
-    global devices
-    global machine1 # washing machine
-    global machine2 # tumble dryer
-    try:
-        machine1.check_if_ready_and_end()
-        machine2.check_if_ready_and_end()
-    except:
-        machine1 = washing_machineor_tumble_dryer(True, unique_id=1, max_duration=<in minutes>)
-        machine2 = washing_machineor_tumble_dryer(False, unique_id=2)
-        devices = {
-            1: machine1,
-            2: machine2,
-        }
-    return render_template('washing_machine-tumble_dryer.html',
-                           wmotdd=[machine1.status_for_web(), machine2.status_for_web()], # wmotdd = washing machine or tumble dryer data
-                           str=str, random_duration=random_duration, views=views, total_views=total_views)
+sudo nano /var/www/html/washing_machine/config.toml.example
 ```
 
-## Future plans
-- [ ] adding database
-- [ ] easier configuration
-- [ ] maybe a install_script
+here is an example with two washing machines and one tumble dryer:
+```toml
+[config]
+
+title = "washing in the dorm building 41/42"
+cookie_warning_text = "default" #  default, custom (my cookie warning text), none
+count_views = true
+show_views = true
+show_total_views = true
+show_qr = true
+qr_code = "auto" # auto, custom (https://subdomain.domain.toplevel/idk), none
+
+# updating the devices list will reset all devices state
+[washer]
+[washer.0]
+max_duration = 300 # in minutes
+[washer.1]
+max_duration = 120 # in minutes
+
+[dryer]
+[dryer.0]
+max_duration = 60 # in minutes
+```
+
 
 
