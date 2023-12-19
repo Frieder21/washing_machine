@@ -1,66 +1,28 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-import sqlite3
 import secrets
 import datetime
 import random
-import toml
-import sys
-import os
-import qrcode
-from qrcode.image.styledpil import StyledPilImage
-from qrcode.image.styles.moduledrawers.pil import RoundedModuleDrawer
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(256)
-def open_toml_file(filename, file_location: str = ""):
-    if file_location == "":
-        file_path = os.path.join(os.path.split(__file__)[0], filename)
-    elif os.path.exists(file_location):
-        file_path = os.path.join(file_location, filename)
-    elif os.path.exists(os.path.join(os.path.split(__file__)[0], file_location)):
-        file_path = os.path.join(os.path.split(__file__)[0], file_location)
-    else:
-        file_path = filename
-    with open(file_path, "r", encoding="utf-8") as file:
-        return toml.load(file)
-
 
 def random_duration():
     return str(str(random.randint(2, 15)) + "s")
 
-def read_views(filename="views", file_location: str = ""):
-    if file_location == "":
-        file_path = os.path.join(os.path.split(__file__)[0], filename)
-    elif os.path.exists(file_location):
-        file_path = os.path.join(file_location, filename)
-    elif os.path.exists(os.path.join(os.path.split(__file__)[0], file_location)):
-        file_path = os.path.join(os.path.split(__file__)[0], file_location)
-    else:
-        file_path = filename
-    with open(file_path, "r",encoding="utf-8") as file:
+def read_views(filename="views"):
+    with open(filename, "r",encoding="utf-8") as file:
         return int(file.read())
 
-def write_views(views, filename="views", file_location: str = ""):
-    if file_location == "":
-        file_path = os.path.join(os.path.split(__file__)[0], filename)
-    elif os.path.exists(file_location):
-        file_path = os.path.join(file_location, filename)
-    elif os.path.exists(os.path.join(os.path.split(__file__)[0], file_location)):
-        file_path = os.path.join(os.path.split(__file__)[0], file_location)
-    else:
-        file_path = filename
-    with open(file_path, "w",encoding="utf-8") as file:
+def write_views(views, filename="views"):
+    with open(filename, "w",encoding="utf-8") as file:
         file.write(str(views))
 
 
 class washing_machineor_tumble_dryer:
-    def __init__(self, washing_machine_or_tumble_dryer: bool, max_duration: int = 240, unique_id: str = 0,
-                 time_left: int = 0, user_id: str = ""):
+    def __init__(self, washing_machine_or_tumble_dryer: bool, max_duration: int = 240, unique_id: int = 0):
         """
 
         :type washing_machine_or_tumble_dryer: bool True = washing_machine, False = tumble_dryer
         :type max_duration: int in minutes
-        :type unique_id: int
-        :type time_left: int in minutes
         """
         import secrets
         import datetime
@@ -69,22 +31,12 @@ class washing_machineor_tumble_dryer:
         else:
             self.device = "tumble_dryer"
         self.max_duration = max_duration
-        if time_left > 0:
-            self.filled = True
-            self.open = False
-            if time_left > max_duration:
-                time_left = max_duration
-            self.end_time = datetime.datetime.now().timestamp() + time_left * 60
-        else:
-            self.filled = False
-            self.open = True
-            self.end_time = datetime.datetime.now().timestamp()
+        self.filled = False
+        self.open = True
+        self.end_time = datetime.datetime.now().timestamp()
         self.start_time = datetime.datetime.now().timestamp()
         self.unique_id = unique_id
-        if user_id == "":
-            self.user_id = None
-        else:
-            self.user_id = user_id
+        self.user_id = None
 
     def start(self, duration_minutes: int):
         if self.end_time > datetime.datetime.now().timestamp():
@@ -157,48 +109,6 @@ class washing_machineor_tumble_dryer:
         dict["unique_id"] = self.unique_id
         return dict
 
-def gen_qr_code(config):
-    if config["qr_code"] == "auto":
-        link = url_for('home', _scheme='https', _external=True)
-    elif config["qr_code"] != "none" or config["qr_code"] != "":
-        link = config["qr_code"]
-    qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_L)
-    qr.add_data(link)
-    img = qr.make_image(image_factory=StyledPilImage, module_drawer=RoundedModuleDrawer())
-    img.save(os.path.join(os.path.split(__file__)[0],"static/assets/img/qrcode.png"))
-
-def load_config():
-    global full_config
-    global devices
-    global config
-    try:
-        full_config_new = open_toml_file("config.toml")
-    except:
-        return [False, "[Error] full_config.toml not found"]
-    try:
-        if full_config == full_config:
-            pass
-    except:
-        full_config = {"washer": {}, "dryer": {}, "config": {}}
-    if not full_config == full_config_new:
-        if not (full_config["washer"] == full_config_new["washer"] and full_config["dryer"] == full_config_new["dryer"]):
-            devices = {}
-            full_config = full_config_new
-            if "washer" in full_config.keys():
-                i = 0
-                for device in full_config["washer"]:
-                    devices["washer"+str(i)] = washing_machineor_tumble_dryer(True, unique_id=str("washer"+str(i)), max_duration=int(full_config["washer"][device]["max_duration"]))
-                    i += 1
-            if "dryer" in full_config.keys():
-                i = 0
-                for device in full_config["dryer"]:
-                    devices["dryer"+str(i)] = washing_machineor_tumble_dryer(False, unique_id=str("dryer"+str(i)), max_duration=int(full_config["dryer"][device]["max_duration"]))
-                    i += 1
-        full_config = full_config_new
-        config = full_config_new["config"]
-        gen_qr_code(config)
-        return [True, "config loaded successfully"]
-    return [True, "success full_config not updated"]
 
 
 
@@ -230,7 +140,7 @@ def api():
             device = request.args.get('device_id')
             hours, minutes = request.args.get('duration').split(":")
             duration = int(hours) * 60 + int(minutes)
-            cookies = devices[device].start(float(duration))
+            cookies = devices[int(device)].start(float(duration))
             resp = app.make_response(redirect(url_for('home', _scheme='https', _external=True)))
             resp.set_cookie(str(device), cookies[0], max_age=int(60 * float(duration)))
             return resp
@@ -240,7 +150,7 @@ def api():
                 user_id = request.cookies.get(str(device))
             except:
                 user_id = ""
-            if devices[device].end(user_id) == "wrong user id":
+            if devices[int(device)].end(user_id) == "wrong user id":
                 return "wrong user id"
             resp = app.make_response(redirect(url_for('home', _scheme='https', _external=True)))
             resp.set_cookie(str(device), '', max_age=0)
@@ -251,7 +161,7 @@ def api():
 @app.route('/start/<device>/<duration>')
 def start(device, duration):
     global devices
-    cookies = devices[int(device)].start(float(duration))
+    cookies = [machine1, machine2][int(device)].start(float(duration))
     resp = app.make_response(redirect(url_for('home')))
     resp.set_cookie('user_id', cookies[0], max_age=int(60 * float(duration)))
     return resp
@@ -270,79 +180,41 @@ def end(device):
 
 
 @app.route("/api/update")
-def nothing():
-    pass
-
-def initial_run():
-    try:
-        read_views()
-    except:
-        write_views(0)
-    try:
-        read_views("totalviews")
-    except:
-        write_views(0, "totalviews")
 
 
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def home():
-    global initial
-    global config
     global devices
-
-    config_success = load_config()
-    if config_success[0]:
-        print(config_success[1])
-    else:
-        return config_success[1]
-
+    global machine1
+    global machine2
+    global machine3
+    global machine4
     try:
-        if initial == True:
-            pass
+        machine1.check_if_ready_and_end()
+        machine2.check_if_ready_and_end()
+        machine3.check_if_ready_and_end()
+        machine4.check_if_ready_and_end()
     except:
-        initial = True
-        initial_run()
-
-    if config["count_views"]:
-        show_views = config["show_views"]
-        show_total_views = config["show_total_views"]
-        views = read_views()
-        if not "user_id" in session:
-            session["user_id"] = secrets.token_hex(256)
-            views += 1
-            write_views(views)
-        total_views = read_views("totalviews")+1
-        write_views(total_views, "totalviews")
-    else:
-        show_views = False
-        views = 0
-        show_total_views = False
-        total_views = 0
-
-    if config["cookie_warning_text"] == "none" or config["cookie_warning_text"] == "":
-        cookie_warning = False
-        cookie_warning_text = ""
-    elif config["cookie_warning_text"] == "default":
-        cookie_warning = True
-        cookie_warning_text = "this website uses technical cookies"
-    else:
-        cookie_warning = True
-        cookie_warning_text = config["cookie_warning_text"]
-
-    title = config["title"]
-
-    if config["qr_code"] == "none" or config["qr_code"] == "":
-        show_qr_code = False
-    else:
-        show_qr_code = True
-
-    wmotdd = []
-    for device in devices:
-        wmotdd.append(devices[device].status_for_web())
-
-    return render_template('washing_machine-tumble_dryer.html', cookie_warning=cookie_warning, cookie_warning_text=cookie_warning_text, title=title, show_qr_code=show_qr_code,
-                           wmotdd=wmotdd, str=str, random_duration=random_duration, show_views=show_views, views=views, show_total_views=show_total_views, total_views=total_views)
+        machine1 = washing_machineor_tumble_dryer(True, unique_id=1)
+        machine2 = washing_machineor_tumble_dryer(True, unique_id=2)
+        machine3 = washing_machineor_tumble_dryer(True, unique_id=3)
+        machine4 = washing_machineor_tumble_dryer(False, unique_id=4)
+        devices = {
+            1: machine1,
+            2: machine2,
+            3: machine3,
+            4: machine4
+        }
+    views = read_views()
+    if not "user_id" in session:
+        session["user_id"] = secrets.token_hex(256)
+        views += 1
+        write_views(views)
+    total_views = read_views("totalviews")+1
+    write_views(total_views, "totalviews")
+    return render_template('washing_machine-tumble_dryer.html',
+                           wmotdd=[machine1.status_for_web(), machine2.status_for_web(), machine3.status_for_web(), machine4.status_for_web()],
+                           str=str, random_duration=random_duration, views=views, total_views=total_views)
 
 @app.route('/favicon.ico')
 def favicon():
