@@ -1,7 +1,7 @@
 # WMTD
 sometimes I'm really bored and in the next moment (15h later) there is a new running website in front of me...
 
-[![wmtd.png](../static/assets/images/wmtd.png)](../static/assets/images/wmtd.png)
+![wmtd.png](https://beta.frieda-univers.me/static/assets/images/wmtd.png)
 
 this is a website you could host on your own for sharing people in your dorm that the washing machine or the tumble dryer is/n't ready to use.
 ## What was the best part?
