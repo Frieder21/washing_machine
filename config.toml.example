@@ -6,7 +6,7 @@ count_views = true
 show_views = true
 show_total_views = true
 show_qr = true
-qr_code_link = "auto" # auto, custom (https://subdomain.domain.toplevel/idk), none
+qr_code = "auto" # auto, custom (https://subdomain.domain.toplevel/idk), none
 
 # updating the devices list will reset all devices state
 [washer]
