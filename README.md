@@ -121,6 +121,10 @@ max_duration = 120 # in minutes
 [dryer.0]
 max_duration = 60 # in minutes
 ```
+## Future plans
+
+-[ ] adding database
+-[x] easier configuration
 
 
 
