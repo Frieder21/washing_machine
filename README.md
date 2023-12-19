@@ -123,8 +123,8 @@ max_duration = 60 # in minutes
 ```
 ## Future plans
 
--[ ] adding database
--[x] easier configuration
+- [ ] adding database
+- [x] easier configuration
 
 
 
