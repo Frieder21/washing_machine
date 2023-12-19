@@ -1,0 +1,23 @@
+[config]
+
+title = "washing in the dorm building 41/42"
+cookie_warning_text = "default" #  default, custom (my cookie warning text), none
+count_views = true
+show_views = true
+show_total_views = true
+show_qr_code = true
+qr_code_link = "auto" # auto, custom (https://subdomain.domain.toplevel/idk), none
+
+# updating the devices list will reset all devices state
+[washer]
+
+[washer.0]
+max_duration = 300 # in minutes
+
+[dryer]
+
+[dryer.0]
+max_duration = 60 # in minutes
+
+
+

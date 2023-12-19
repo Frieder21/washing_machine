@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/static/assets/css/style.css">
     <link rel="stylesheet" href="/static/assets/css/color-scheme.css">
     <script src="/static/assets/js/script.js"></script>
-    <title>{{ title }}</title>
+    <title>WMTD</title>
     <meta http-equiv="Cache-Control" content="no-store" />
 </head>
 <body>
@@ -14,18 +14,16 @@
             <table id="headercontenttable">
                 <tr>
                     <td>
-                        <h1 id="title">{{ title }}{% if cookie_warning %}<br>-<br>this website uses technical cookies{% endif %}</h1>
+                        <h1 id="title">washing in the dorm building 41/42<br>-<br>this website uses technical cookies</h1>
                     </td>
-                    {% if show_qr_code %}
                     <td>
                         <div id="sharecode">
                             <a href="/static/assets/img/qrcode.png">
-                                <img id="qrcode" src="/static/assets/img/qrcode.png">
+                                <img id="qrcode" src="/static/assets/img/qr-small.png">
                                 <h2>share code</h2>
                             </a>
                         </div>
                     </td>
-                    {% endif %}
                 </tr>
             </table>
         </div>
@@ -83,16 +81,12 @@
                 <td>
                     <a href="https://beta.frieda-univers.me/article?article=wmtd">Project Page</a>
                 </td>
-                {% if show_views %}
                 <td>
                     <p class="user_count">views: {{ views }}</p>
                 </td>
-                {% endif %}
-                {% if show_total_views %}
                 <td>
                     <p class="user_count">loads: {{ total_views }}</p>
                 </td>
-                {% endif %}
             </tr>
         </table>
         <table id="itemicon">

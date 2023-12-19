@@ -1,0 +1,21 @@
+[config]
+
+title = "Laundry"
+show_cookie_warning = true
+show_views = true
+show_total_views = true
+qr_code = true
+qr_code_link = "auto" # auto, custom (https://subdomain.domain.toplevel/idk), none
+
+[washer]
+
+[washer.0]
+max_duration = 300 # in minutes
+
+[dryer]
+
+[dryer.0]
+max_duration = 60 # in minutes
+
+
+
