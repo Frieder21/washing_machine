@@ -125,6 +125,6 @@ max_duration = 60 # in minutes
 
 - [ ] adding database
 - [x] easier configuration
-
+- [ ] qr-checkout
 
 
